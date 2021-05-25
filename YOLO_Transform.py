@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import sys
+sys.path.append('/DOTA_yolov5')
 import dota_utils as util
 import os
 import numpy as np
@@ -56,6 +58,7 @@ def dota2Darknet(imgpath, txtpath, dstpath, extractclassname):
                 f_out.write(outline + '\n')  # 写入txt文件中并加上换行符号 \n
 
 ## trans dota format to  (cls, c_x, c_y, Longest side, short side, angle:[0,179))
+# 长边表示法 https://zhuanlan.zhihu.com/p/356416158
 def dota2LongSideFormat(imgpath, txtpath, dstpath, extractclassname):
     """
     trans dota farmat to longside format
@@ -91,7 +94,7 @@ def dota2LongSideFormat(imgpath, txtpath, dstpath, extractclassname):
                 num_gt = num_gt + 1  # 为当前有效gt计数
                 poly = obj['poly']  # poly=[(x1,y1),(x2,y2),(x3,y3),(x4,y4)]
                 poly = np.float32(np.array(poly))
-                # 四点坐标归一化
+                # 四点坐标归一化。
                 poly[:, 0] = poly[:, 0]/img_w
                 poly[:, 1] = poly[:, 1]/img_h
 
@@ -296,15 +299,39 @@ def delete(imgpath, txtpath):
         if not os.path.exists(img_fullname):  # 如果文件bu存在
             os.remove(fullname)
 
+# if __name__ == '__main__':
+#     ## an example
+#
+#     dota2LongSideFormat('./DOTA_demo/images',
+#                         './DOTA_demo/labelTxt',
+#                         './DOTA_demo/yolo_labels',
+#                         util.classnames_v1_5)
+#
+#     drawLongsideFormatimg(imgpath='DOTA_demo/images',
+#                           txtpath='DOTA_demo/yolo_labels',
+#                           dstpath='DOTA_demo/draw_longside_img',
+#                           extractclassname=util.classnames_v1_5)
+
+
+# 先dota2LongSideFormat生成最小外接矩形的中心点的x坐标、y坐标、x轴逆时针旋转碰到矩形的第一条边、与width对应的另一边、旋转角度
+# 接着调用cvminAreaRect2longsideformat把x轴逆时针旋转碰到矩形的第一条边、与width对应的另一边转化为长边表示法中的最长的一条边longside，最短的一条鞭shortsize
 if __name__ == '__main__':
     ## an example
 
-    dota2LongSideFormat('./DOTA_demo/images',
-                        './DOTA_demo/labelTxt',
-                        './DOTA_demo/yolo_labels',
-                        util.classnames_v1_5)
+    # dota2LongSideFormat('./DOTA_demo/images',
+    #                     './DOTA_demo/labelTxt',
+    #                     './DOTA_demo/yolo_labels',
+    #                     util.classnames_v1_5)
+    # dota2LongSideFormat('/home/20184868@software.com/PM/datasets/DOTA1.0/train/images/images',
+    #                     '/home/20184868@software.com/PM/datasets/DOTA1.0/train/labelTxt-v1.0/labelTxt',
+    #                     '/home/20184868@software.com/PM/datasets/DOTA1.0/train/yolo_labels',
+    #                     util.classnames_v1_0)
+    dota2LongSideFormat('/DOTA_yolov5/test_moxing_zhibiao/fenge_raw/images',
+                        '/DOTA_yolov5/test_moxing_zhibiao/fenge_raw/labelTxt',
+                        '/DOTA_yolov5/test_moxing_zhibiao/fenge_zuihou',
+                        util.classnames_v1_0)
 
-    drawLongsideFormatimg(imgpath='DOTA_demo/images',
-                          txtpath='DOTA_demo/yolo_labels',
-                          dstpath='DOTA_demo/draw_longside_img',
-                          extractclassname=util.classnames_v1_5)
+    # drawLongsideFormatimg(imgpath='/DOTA_yolov5/images/P2805__1__512___512.png',
+    #                       txtpath='/DOTA_yolov5/labels/P2805__1__512___512.png',
+    #                       dstpath='DOTA_demo/draw_longside_img',
+    #                       extractclassname=util.classnames_v1_0)

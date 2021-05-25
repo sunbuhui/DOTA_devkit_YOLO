@@ -1,4 +1,3 @@
-# coding=gbk
 """
 -------------
 This is the multi-process version
@@ -56,11 +55,11 @@ class splitbase():
                  num_process=8
                  ):
         """
-        :param basepath: base path for dota data  ´ı·Ö¸îµÄÎÄ¼ş¼Ğ
-        :param outpath: output base path for dota data,  Êä³ö·Ö¸îÍ¼Æ¬µÄÎÄ¼ş¼Ğ
+        :param basepath: base path for dota data  å¾…åˆ†å‰²çš„æ–‡ä»¶å¤¹
+        :param outpath: output base path for dota data,  è¾“å‡ºåˆ†å‰²å›¾ç‰‡çš„æ–‡ä»¶å¤¹
         the basepath and outputpath have the similar subdirectory, 'images' and 'labelTxt'
         :param code: encodeing format of txt file
-        :param gap: overlap between two patches  Á½ÕÅÍ¼Æ¬Ö®¼äµÄÖØµş
+        :param gap: overlap between two patches  ä¸¤å¼ å›¾ç‰‡ä¹‹é—´çš„é‡å 
         :param subsize: subsize of patch
         :param thresh: the thresh determine whether to keep the instance if the instance is cut down in the process of split
         :param choosebestpoint: used to choose the first point for the
@@ -83,16 +82,24 @@ class splitbase():
         self.padding = padding
         self.num_process = num_process
         self.pool = Pool(num_process)
+        # self.imagepath = '/DOTA_yolov5/eva/image'
+        # self.labelpath = '/DOTA_yolov5/eva/txt'
+        self.imagepath = '/DOTA_yolov5/test_moxing_zhibiao/image'
+        self.labelpath = '/DOTA_yolov5/test_moxing_zhibiao/txt'
+        print('imagePath:', self.imagepath)
+        print('labelPath:', self.labelpath)
         print('padding:', padding)
 
         # pdb.set_trace()
-        if not os.path.isdir(self.outpath):
-            os.mkdir(self.outpath)
-        if not os.path.isdir(self.outimagepath):
-            # pdb.set_trace()
-            os.mkdir(self.outimagepath)
-        if not os.path.isdir(self.outlabelpath):
-            os.mkdir(self.outlabelpath)
+        # if not os.path.isdir(self.outpath):
+        #     os.mkdir(self.outpath)
+        # if not os.path.isdir(self.outimagepath):
+        #     # pdb.set_trace()
+        #     os.mkdir(self.outimagepath)
+        # if not os.path.isdir(self.outlabelpath):
+        #     os.mkdir(self.outlabelpath)
+        self.outimagepath = os.path.abspath(self.outimagepath)
+        self.outlabelpath = os.path.abspath(self.outlabelpath)
         # pdb.set_trace()
     ## point: (x, y), rec: (xmin, ymin, xmax, ymax)
     # def __del__(self):
@@ -295,10 +302,10 @@ if __name__ == '__main__':
     #
     # d)
 
-    split = splitbase(r'example',
-                      r'example_split',
-                      gap=200,        # ÖØµşÇøÓò
-                      subsize=1024,   # ±»·Ö¸î³ÉµÄĞ¡Í¼Æ¬µÄsize
+    split = splitbase(r'è¿™å—æ²¡ç”¨',
+                      r'/DOTA_yolov5/test_moxing_zhibiao/fenge_raw',
+                      gap=512,        # é‡å åŒºåŸŸ
+                      subsize=1024,   # è¢«åˆ†å‰²æˆçš„å°å›¾ç‰‡çš„size
                       num_process=8
                       )
     split.splitdata(1)  # resize rate before cut
